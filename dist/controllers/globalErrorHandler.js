@@ -1,6 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const sendDevError = (err, res) => {
+import * as errorHandlers from "../errors/errorHandlers";
+const sendErrorDev = (err, res) => {
     res.status(err.statusCode).json({
         status: err.status,
         message: err.message,
@@ -8,9 +7,36 @@ const sendDevError = (err, res) => {
         error: err,
     });
 };
-exports.default = (err, req, res, next) => {
+const sendErrorProd = (err, res) => {
+    if (err.isOperational) {
+        res.status(err.statusCode).json({
+            status: err.status,
+            message: err.message,
+        });
+    }
+    else {
+        console.error("ERROR: ", err);
+        res.status(500).json({
+            status: "Error",
+            message: "Something went wrong!",
+        });
+    }
+};
+export default (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || "Error";
     if (process.env.NODE_ENV === "development")
-        sendDevError(err, res);
+        sendErrorDev(err, res);
+    if (process.env.NODE_ENV === "production") {
+        let error = Object.assign(err);
+        if (error?.errorResponse?.code === 11000)
+            error = errorHandlers.duplicateKeyHandler(error);
+        if (error?.name === "ValidationError")
+            error = errorHandlers.validationErrorHandler(error);
+        if (error?.name === "TokenExpiredError")
+            error = errorHandlers.tokenExpiredHandler();
+        if (error?.name === "JsonWebTokenError")
+            error = errorHandlers.jwtErrorHandler();
+        sendErrorProd(error, res);
+    }
 };
