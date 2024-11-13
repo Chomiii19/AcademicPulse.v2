@@ -15,7 +15,7 @@ const login = catchAsync(async (req, res, next) => {
     const user = await AuthService.findById(req.body.idNumber);
     await AuthService.verifyPassword(user, req.body.password);
     await AuthService.isUserValidated(user.isValid);
-    createSendToken(user, 201, res);
+    createSendToken(user, 200, res);
 });
 const verifyUser = catchAsync(async (req, res, next) => {
     await User.updateOne({ _id: req.params.id }, { isValid: true }, { runValidators: false });

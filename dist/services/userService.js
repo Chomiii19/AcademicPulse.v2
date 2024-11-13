@@ -4,7 +4,7 @@ import verifyToken from "../utils/verifyToken";
 class UserService {
     async checkToken(token) {
         if (!token)
-            throw new AppError("Your are not logged in!", 401);
+            throw new AppError("You are not logged in!", 401);
         const decoded = await verifyToken(token);
         return decoded;
     }

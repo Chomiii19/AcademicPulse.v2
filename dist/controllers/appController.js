@@ -54,7 +54,7 @@ const enrolledStats = catchAsync(async (req, res, next) => {
     });
 });
 const validatedStats = catchAsync(async (req, res, next) => {
-    const data = await AppService.validatedStatService;
+    const data = await AppService.validatedStatService(req);
     res.status(200).json({
         status: "Success",
         data,
