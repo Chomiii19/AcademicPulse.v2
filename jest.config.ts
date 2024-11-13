@@ -7,7 +7,7 @@ const config: Config = {
     "^.+\\.tsx?$": "ts-jest", // Transform TypeScript files using ts-jest
   },
   moduleFileExtensions: ["ts", "tsx", "js", "json"], // Allow .ts, .tsx, .js, .json extensions
-  testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"], // Match test files with .test.ts or .spec.ts extension
+  testMatch: ["**/src/tests/**/*.(spec|test).[tj]s?(x)"], // Match test files with .test.ts or .spec.ts extension
 };
 
 export default config;
