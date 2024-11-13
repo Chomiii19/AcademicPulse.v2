@@ -22,6 +22,8 @@ describe("UserController", () => {
       clearCookie: jest.fn(),
     };
     next = jest.fn();
+    // Reset mocks between tests to ensure clean state
+    jest.clearAllMocks();
   });
 
   it("should return user data when getUser is called successfully", async () => {
@@ -29,12 +31,11 @@ describe("UserController", () => {
     const mockUser = { name: "John Doe", email: "john@example.com" };
 
     // Mock the methods
-    (UserService.checkToken as jest.Mock).mockResolvedValue(mockDecoded);
-    (UserService.findById as jest.Mock).mockResolvedValue(mockUser);
+    (UserService.checkToken as jest.Mock).mockResolvedValueOnce(mockDecoded);
+    (UserService.findById as jest.Mock).mockResolvedValueOnce(mockUser);
 
     await getUser(req as Request, res as Response, next);
 
-    // Check if the status and json response are called correctly
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       status: "Success",
@@ -42,17 +43,20 @@ describe("UserController", () => {
     });
   });
 
-  it("should return an error if user is not found in getUser", async () => {
+  it("should call next with error if user is not found in getUser", async () => {
     const mockDecoded = { id: "someInvalidUserId" };
 
     // Mock the methods
-    (UserService.checkToken as jest.Mock).mockResolvedValue(mockDecoded);
-    (UserService.findById as jest.Mock).mockResolvedValue(null);
+    (UserService.checkToken as jest.Mock).mockResolvedValueOnce(mockDecoded);
+    (UserService.findById as jest.Mock).mockResolvedValueOnce(null);
 
     await getUser(req as Request, res as Response, next);
 
-    // Check if next is called with an error
-    expect(next).toHaveBeenCalledWith(expect.any(Error));
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: expect.stringContaining("User does not exist."),
+      })
+    );
   });
 
   it("should update user successfully", async () => {
@@ -62,9 +66,9 @@ describe("UserController", () => {
       email: "updated@example.com",
     };
 
-    // Mock the methods directly without using 'mocked'
-    (UserService.checkToken as jest.Mock).mockResolvedValue(mockDecoded);
-    (UserService.findByIdAndUpdate as jest.Mock).mockResolvedValue(
+    // Mock the methods directly
+    (UserService.checkToken as jest.Mock).mockResolvedValueOnce(mockDecoded);
+    (UserService.findByIdAndUpdate as jest.Mock).mockResolvedValueOnce(
       mockUpdatedUser
     );
 
@@ -80,9 +84,9 @@ describe("UserController", () => {
   it("should delete user successfully", async () => {
     const mockDecoded = { id: "someUserId" };
 
-    // Mock the methods directly without using 'mocked'
-    (UserService.checkToken as jest.Mock).mockResolvedValue(mockDecoded);
-    (UserService.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
+    // Mock the methods directly
+    (UserService.checkToken as jest.Mock).mockResolvedValueOnce(mockDecoded);
+    (UserService.findByIdAndDelete as jest.Mock).mockResolvedValueOnce(null);
 
     await deleteUser(req as Request, res as Response, next);
 
