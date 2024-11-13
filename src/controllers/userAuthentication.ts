@@ -24,7 +24,7 @@ const login = catchAsync(
     await AuthService.verifyPassword(user, req.body.password);
     await AuthService.isUserValidated(user.isValid);
 
-    createSendToken(user, 201, res);
+    createSendToken(user, 200, res);
   }
 );
 

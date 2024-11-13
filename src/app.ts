@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
 import mongoSanitize from "express-mongo-sanitize";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes";
@@ -8,6 +9,13 @@ import globalErrorHandler from "./controllers/globalErrorHandler";
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "https://chomikun.com",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(mongoSanitize());
 app.use(express.json());
 app.use(cookieParser());
