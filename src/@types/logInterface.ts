@@ -1,4 +1,6 @@
-interface IStudentLog {
+import { Document } from "mongoose";
+
+interface IStudentLog extends Document {
   studentNumber: string;
   inSchool: boolean;
   date: Date;

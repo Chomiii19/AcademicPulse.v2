@@ -5,7 +5,6 @@ import IUser from "../@types/userInterfaces";
 const createSendToken = (user: IUser, statusCode: number, res: Response) => {
   const token = signToken(user._id);
   const cookieExpiry = Number(process.env.JWT_COOKIE_EXPIRES_IN);
-  console.log(cookieExpiry);
 
   if (!cookieExpiry)
     throw new Error("There was an error finding the secret key.");

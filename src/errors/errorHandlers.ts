@@ -1,16 +1,15 @@
-import { Error as MongooseError } from "mongoose";
 import AppError from "./appError";
+import { DuplicateKeyError, ValidationError } from "../@types/errorInterface";
 
-const duplicateKeyHandler = (error: MongooseError) => {
-  const value = error.errorResponse.errmsg.match(/(["'])(\\?.)*\1/)[0];
-  const msg = `Duplicate field value: ${value}. Please use another value.`;
+const duplicateKeyHandler = (error: DuplicateKeyError) => {
+  const value = error.errorResponse.errmsg.match(/(["'])(\\?.)*\1/);
+  if (!value) throw new Error("Error message pattern not found");
+  const msg = `Duplicate field value: ${value[0]}. Please use another value.`;
   return new AppError(msg, 400);
 };
 
-const validationErrorHandler = (error: AppError) => {
-  const errors = Object.values(
-    error.errors as Record<string, Error.ValidatorError>
-  ).map((el) => el.message);
+const validationErrorHandler = (error: ValidationError) => {
+  const errors = Object.values(error.errors).map((el) => el.message);
   const msg = `Error: ${errors.join(". ")}`;
   return new AppError(msg, 400);
 };

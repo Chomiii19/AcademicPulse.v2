@@ -1,5 +1,3 @@
-import { Document } from "mongoose";
-
 interface IUser {
   _id: number;
   idNumber: string;
