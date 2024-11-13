@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../models/userModel";
 import catchAsync from "../utils/catchAsync";
-import AppError from "../utils/appError";
+import AppError from "../errors/appError";
 
 const roleAuthorization = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

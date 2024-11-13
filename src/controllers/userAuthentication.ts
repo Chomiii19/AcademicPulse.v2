@@ -3,7 +3,7 @@ import User from "../models/userModel";
 import AuthService from "../services/authService";
 import sendMail from "../utils/sendEmail";
 import catchAsync from "../utils/catchAsync";
-import AppError from "../utils/appError";
+import AppError from "../errors/appError";
 import createSendToken from "../utils/createSendToken";
 
 const signup = catchAsync(

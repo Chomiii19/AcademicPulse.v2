@@ -1,6 +1,6 @@
 import { JwtPayload } from "jsonwebtoken";
 import User from "../models/userModel";
-import AppError from "../utils/appError";
+import AppError from "../errors/appError";
 import verifyToken from "../utils/verifyToken";
 
 class UserService {

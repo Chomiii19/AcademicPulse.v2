@@ -1,6 +1,6 @@
 import { Request } from "express";
 import User from "../models/userModel";
-import AppError from "../utils/appError";
+import AppError from "../errors/appError";
 import IUser from "../@types/userInterfaces";
 
 class AuthService {
